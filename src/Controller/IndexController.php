@@ -67,8 +67,16 @@ class IndexController extends AbstractActionController
     {
         $view = new ViewModel;
         $request = $this->getRequest();
-        $query = $request->getQuery()->toArray();
-        $items = $this->api->search('items', $query)->getContent();
+        if ($request->getMethod() === 'POST' && $request->getPost('resource_ids')) {
+            $items = [];
+            $itemsIds = $request->getPost('resource_ids');
+            foreach ($itemsIds as $itemId) {
+                $items[] = $this->api->search('items', ['id' => $itemId])->getContent()[0];
+            }
+        } else {
+            $query = $request->getQuery()->toArray();
+            $items = $this->api->search('items', $query)->getContent();
+        }
         $items = $this->formatData($items);
         $itemMedia = [];
         foreach ($items as $item) {
@@ -92,6 +100,7 @@ class IndexController extends AbstractActionController
             }
             array_push($itemMedia, $item);
         }
+
         $properties = $this->getData("", 'term', 'properties');
         $propertyNames = [];
         foreach ($properties as $property) {
