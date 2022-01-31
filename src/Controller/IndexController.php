@@ -67,13 +67,17 @@ class IndexController extends AbstractActionController
     {
         $view = new ViewModel;
         $request = $this->getRequest();
-        if ($request->isPost()) {
-            $out = $_REQUEST["add_to_item_set"];
+        if ($request->getMethod() === 'POST' && $request->getPost('resource_ids')) {
+            $items = [];
+            $itemsIds = $request->getPost('resource_ids');
+            foreach ($itemsIds as $itemId) {
+                $items[] = $this->api->search('items', ['id' => $itemId])->getContent()[0];
+            }
         } else {
-            $out = "Connection error or no search results";
+            $query = $request->getQuery()->toArray();
+            $items = $this->api->search('items', $query)->getContent();
         }
-        $field = 'item_set_id';
-        $items = $this->getData($out, 'item_set_id', 'items');
+        $items = $this->formatData($items);
         $itemMedia = [];
         foreach ($items as $item) {
             if (array_key_exists('o:media', $item) && !empty($item['o:media'])) {
@@ -96,6 +100,7 @@ class IndexController extends AbstractActionController
             }
             array_push($itemMedia, $item);
         }
+
         $properties = $this->getData("", 'term', 'properties');
         $propertyNames = [];
         foreach ($properties as $property) {
