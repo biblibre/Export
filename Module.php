@@ -23,7 +23,6 @@ class Module extends AbstractModule
             'view.show.sidebar',
             [$this, 'echoExportButtonHtml']
         );
-        
     }
     public function echoExportButtonHtml($event)
     {

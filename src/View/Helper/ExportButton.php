@@ -4,7 +4,6 @@ namespace Export\View\Helper;
 
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\Mvc\Application;
-use Laminas\Form\Element\Button;
 
 class ExportButton extends AbstractHelper
 {
@@ -21,28 +20,25 @@ class ExportButton extends AbstractHelper
 
         $route = $routeMatch->getMatchedRouteName();
         $params = $routeMatch->getParams();
+
         $view = $this->getView();
         $onResultPage = true;
 
-        if ($route==='admin/id' && ($params['controller']==='Omeka\Controller\Admin\Item' && $params['action']==='show')) {
-            $query= [
-            'id' => $params['id']
+        if ($route === 'admin/id' && ($params['controller'] === 'Omeka\Controller\Admin\Item' && $params['action'] === 'show')) {
+            $query = [
+            'id' => $params['id'],
            ];
             $onResultPage = false;
         } else {
             $query = $request->getQuery()->toArray();
-            unset($query['page']);
         }
-        if ($request->getPost('resource_ids')) {
-            $url = $view->url('admin/export/download', [], true);
-        }
-        
+
         $url = $view->url('admin/export/download', [], ['query' => $query]);
-      
+
         if ($onResultPage) {
-            return '<button form="batch-form" formaction="'.$url.'">Export CSV</button>';
+            return '<button form="batch-form" formaction="' . $url . '">Export CSV</button>';
         } else {
-            return '<a href="'.$url.'"><button>Export CSV</button></a>';
+            return '<a href="' . $url . '"><button>Export CSV</button></a>';
         }
     }
 }

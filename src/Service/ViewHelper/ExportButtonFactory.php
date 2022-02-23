@@ -35,9 +35,9 @@ use Export\View\Helper\ExportButton;
 
 class ExportButtonFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $serviceLocator, $requestedName, array $options = null)
     {
-        $application = $container->get('Application');
+        $application = $serviceLocator->get('Application');
 
         $viewHelper = new ExportButton($application);
 
