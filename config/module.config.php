@@ -15,6 +15,7 @@ return [
     'controllers' => [
         'factories' => [
             'Export\Controller\Index' => Service\Controller\IndexControllerFactory::class,
+            'Export\Controller\List' => Service\Controller\IndexControllerFactory::class,
         ],
     ],
     'router' => [
@@ -28,7 +29,7 @@ return [
                             'defaults' => [
                                 '__NAMESPACE__' => 'Export\Controller',
                                 'controller' => 'Index',
-                                'action' => 'index',
+                                'action' => 'export',
                             ],
                         ],
                         'may_terminate' => true,
@@ -41,6 +42,17 @@ return [
                                         '__NAMESPACE__' => 'Export\Controller',
                                         'controller' => 'Index',
                                         'action' => 'download',
+                                    ],
+                                ],
+                            ],
+                            'list' => [
+                                'type' => 'Literal',
+                                'options' => [
+                                    'route' => '/list',
+                                    'defaults' => [
+                                        '__NAMESPACE__' => 'Export\Controller',
+                                        'controller' => 'List',
+                                        'action' => 'index',
                                     ],
                                 ],
                             ],
@@ -59,15 +71,15 @@ return [
                 'resource' => 'Export\Controller\Index',
                 'pages' => [
                     [
-                        'label' => 'Export', // @translate
-                        'route' => 'admin/export',
-                        'resource' => 'Export\Controller\Index',
-                    ],
-                    [
                         'label' => 'Download', // @translate
                         'route' => 'admin/export/download',
                         'resource' => 'Export\Controller\Index',
                         'visible' => false,
+                    ],
+                    [
+                        'label' => 'Download List', // @translate
+                        'route' => 'admin/export/list',
+                        'resource' => 'Export\Controller\List',
                     ],
                 ],
             ],
@@ -86,6 +98,11 @@ return [
     'view_helpers' => [
         'factories' => [
             'exportButton' => Service\ViewHelper\ExportButtonFactory::class,
+        ],
+    ],
+    'service_manager' => [
+        'factories' => [
+            'Export\Exporter' => Service\ExporterFactory::class,
         ],
     ],
 ];
