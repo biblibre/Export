@@ -1,9 +1,0 @@
-<?php
-$escapeHtml = $this->plugin('escapeHtml');
-$this->headLink()->appendStylesheet($this->assetUrl('css/export.css', 'Export'));
-?>
-
-<?php echo $this->pageTitle($this->translate('Download list'), 1, $this->translate('Export')); ?>
-<div>
-    <?php echo "Mon message est " . $plop ?>
-</div>

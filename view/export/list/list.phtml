@@ -1,0 +1,16 @@
+<?php
+$escapeHtml = $this->plugin('escapeHtml');
+$this->headLink()->appendStylesheet($this->assetUrl('css/export.css', 'Export'));
+?>
+
+<?php echo $this->pageTitle($this->translate('Download list'), 1, $this->translate('Export')); ?>
+<ul>
+    <?php foreach ($downloads as $download) {
+    $filePath = "/files/CSV_Export/" . $download ?>
+
+    <li>
+        <a class="o-icon-install" href="<?php echo $filePath ?>" > <?php echo $download ?> </a>
+    </li>
+    <?php
+} ?>
+</ul>

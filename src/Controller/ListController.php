@@ -6,20 +6,12 @@ use Laminas\View\Model\ViewModel;
 
 class ListController extends AbstractActionController
 {
-    public function __construct($serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-    }
-
-    public function indexAction()
+    public function listAction()
     {
         $view = new ViewModel;
-        $directoryPath = '~/omeka-s/files/CSV_Export';
-        $downloads = scandir($directoryPath);
+        $directoryPath = 'files/CSV_Export';
+        $downloads = array_diff(scandir($directoryPath, SCANDIR_SORT_DESCENDING), ['..', '.']);
         $view->setVariable('downloads', $downloads);
-
-        $plop = "hello world";
-        $view->setVariable('plop', $plop);
 
         return $view;
     }

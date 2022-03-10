@@ -13,9 +13,11 @@ return [
         ],
     ],
     'controllers' => [
+        'invokables' => [
+            'Export\Controller\List' => Controller\ListController::class,
+        ],
         'factories' => [
             'Export\Controller\Index' => Service\Controller\IndexControllerFactory::class,
-            'Export\Controller\List' => Service\Controller\IndexControllerFactory::class,
         ],
     ],
     'router' => [
@@ -52,7 +54,7 @@ return [
                                     'defaults' => [
                                         '__NAMESPACE__' => 'Export\Controller',
                                         'controller' => 'List',
-                                        'action' => 'index',
+                                        'action' => 'list',
                                     ],
                                 ],
                             ],
@@ -79,6 +81,8 @@ return [
                     [
                         'label' => 'Download List', // @translate
                         'route' => 'admin/export/list',
+                        'controller' => 'List',
+                        'action' => 'list',
                         'resource' => 'Export\Controller\List',
                     ],
                 ],
