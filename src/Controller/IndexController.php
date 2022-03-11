@@ -87,13 +87,17 @@ class IndexController extends AbstractActionController
             $this->sendJob(['query' => $args]);
 
             $message = new Message(
-                'Export started', // @translate
+                'Export started in %sjob %s%s', // @translate
+                sprintf('<a href="%s">', htmlspecialchars($this->getJobUrl(),
+            )),
+                $this->getJobId(),
+                '</a>'
             );
 
             $message->setEscapeHtml(false);
             $this->messenger()->addSuccess($message);
 
-            return $this->redirect()->toRoute('admin/id', ['controller' => 'job', 'action' => 'show', 'id' => $this->getJobId()], []);
+            return $this->redirect()->toRoute('admin/export/list', ['controller' => 'list', 'action' => 'list'], []);
         }
     }
 
