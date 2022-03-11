@@ -17,6 +17,9 @@ $this->headLink()->appendStylesheet($this->assetUrl('css/export.css', 'Export'))
             <a class="o-icon-install" href="<?php echo $filePath ?>" > 
                 <?php echo $download ?>
             </a>
+            <button>
+                <a class="o-icon-delete" href="<?php echo $this->escapeHtml($this->url('admin/export/list/delete', ['controller' => 'list', 'action' => 'delete'], ['query' => ['filePath' => $filePath]])); ?>"></a>
+            </button>
         </li>
         <?php
 } ?>

@@ -57,6 +57,20 @@ return [
                                         'action' => 'list',
                                     ],
                                 ],
+                                'may_terminate' => true,
+                                'child_routes' => [
+                                    'delete' => [
+                                        'type' => 'Literal',
+                                        'options' => [
+                                            'route' => '/delete',
+                                            'defaults' => [
+                                                '__NAMESPACE__' => 'Export\Controller',
+                                                'controller' => 'list',
+                                                'action' => 'delete',
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ],

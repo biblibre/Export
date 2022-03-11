@@ -15,4 +15,11 @@ class ListController extends AbstractActionController
 
         return $view;
     }
+
+    public function deleteAction()
+    {
+        $query = $this->getRequest()->getQuery();
+        unlink($query['filePath']);
+        return $this->redirect()->toRoute('admin/export/list', ['controller' => 'list', 'action' => 'list'], []);
+    }
 }
