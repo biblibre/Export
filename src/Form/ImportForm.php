@@ -2,16 +2,16 @@
 namespace Export\Form;
 
 use Omeka\Form\Element\ItemSetSelect;
-use Zend\Form\Form;
+use Laminas\Form\Form;
 
 class ImportForm extends Form
 {
     public function init()
     {
-        $this->setAttribute('action', 'export/download');
-        $this->setAttribute('method', 'post');
+        //$this->setAttribute('action', 'export/job');
+        //$this->setAttribute('method', 'post');
         $this->add([
-                    'name' => 'add_to_item_set',
+                    'name' => 'item_set',
                     'type' => ItemSetSelect::class,
                     'attributes' => [
                         'id' => 'select-item-set',

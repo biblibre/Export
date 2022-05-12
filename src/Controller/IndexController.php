@@ -2,114 +2,136 @@
 namespace Export\Controller;
 
 use Export\Form\ImportForm;
-use Omeka\Api\Manager as ApiManager;
-use Omeka\Settings\UserSettings;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Export\Job\ExportJob;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Omeka\Stdlib\Message;
 
 class IndexController extends AbstractActionController
 {
-    /**
-     * @var array
-     */
-    protected $config;
-
-    /**
-     * @var UserSettings
-     */
-    protected $userSettings;
     protected $serviceLocator;
-    /**
-     * @var Logger
-     */
-    protected $logger;
-    /**
-     * @var ApiManager
-     */
-    protected $api;
+    protected $jobId;
+    protected $jobUrl;
 
-    /**
-     * @param array $config
-     * @param Manager $api
-     * @param UserSettings $userSettings
-     */
-    public function __construct(array $config, ApiManager $api, UserSettings $userSettings, $serviceLocator)
+    public function __construct($serviceLocator)
     {
-        $this->config = $config;
-        $this->api = $api;
-        $this->userSettings = $userSettings;
         $this->serviceLocator = $serviceLocator;
     }
 
-    public function indexAction()
+    public function exportAction()
     {
         $view = new ViewModel;
         $form = $this->getForm(ImportForm::class);
         $view->form = $form;
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $formData = $form->getData();
+
+                $args['query'] = ['item_set_id' => $formData['item_set']];
+                $this->sendJob($args);
+
+                $message = new Message(
+                    'Export started in %sjob %s%s', // @translate
+                    sprintf('<a href="%s">', htmlspecialchars($this->getJobUrl(),
+                )),
+                    $this->getJobId(),
+                    '</a>'
+                );
+
+                $message->setEscapeHtml(false);
+                $this->messenger()->addSuccess($message);
+
+                return $this->redirect()->toRoute(null, [], [], true);
+            } else {
+                $this->messenger()->addFormErrors($form);
+            }
+        }
+
         return $view;
     }
-    protected function getData($criteria, $field, $type)
-    {
-        $api = $this->api;
-        $query[$field] = $criteria;
-        $items = $api->search($type, $query)->getContent();
-        $out = $this->formatData($items);
 
-        return $out;
-    }
-    protected function formatData($rawData)
-    {
-        $arr = json_encode($rawData, true);
-        $items = json_decode($arr, true);
-        return $items ;
-    }
     public function downloadAction()
     {
-        $view = new ViewModel;
+        $exporter = $this->serviceLocator->get('Export\Exporter');
         $request = $this->getRequest();
-        if ($request->getMethod() === 'POST' && $request->getPost('resource_ids')) {
-            $items = [];
-            $itemsIds = $request->getPost('resource_ids');
-            foreach ($itemsIds as $itemId) {
-                $items[] = $this->api->search('items', ['id' => $itemId])->getContent()[0];
-            }
-        } else {
-            $query = $request->getQuery()->toArray();
-            $items = $this->api->search('items', $query)->getContent();
-        }
-        $items = $this->formatData($items);
-        $itemMedia = [];
-        foreach ($items as $item) {
-            if (array_key_exists('o:media', $item) && !empty($item['o:media'])) {
-                $mediaIds = $item['o:media'];
-                $mediaOut = "";
-                $mediaJson = "";
-                foreach ($mediaIds as $mediaId) {
-                    $id = $mediaId['o:id'];
-                    $media = $this->getData($id, 'id', 'media');
-                    foreach ($media as $medium) {
-                        $mediaOut = $mediaOut . $medium['o:filename'] . ";";
-                        $mediaJson = $mediaJson . json_encode($medium) . ";";
-                        $item['media:link'] = $mediaOut;
-                        $item['media:full'] = $mediaJson;
-                    }
-                }
-            } else {
-                $item['media:link'] = "";
-                $item['media:full'] = "";
-            }
-            array_push($itemMedia, $item);
-        }
+        $postParams = $request->getPost();
+        $queryParams = $request->getQuery();
 
-        $properties = $this->getData("", 'term', 'properties');
-        $propertyNames = [];
-        foreach ($properties as $property) {
-            $p = $property['o:term'];
-            array_push($propertyNames, $p);
+        if ($postParams['resource_ids'] || $queryParams['id']) {
+            $csvTemp = tmpfile();
+            $exporter->setFileHandle($csvTemp);
+
+            if ($postParams['resource_ids']) {
+                $exporter->downloadSelected($postParams['resource_ids']);
+            } else {
+                $exporter->downloadOne($queryParams['id']);
+            }
+            fseek($csvTemp, 0);
+            $rows = '';
+            while (! feof($csvTemp)) {
+                $rows .= fread($csvTemp, 1024);
+            }
+            fclose($csvTemp);
+
+            $response = $this->getResponse();
+            $response->setContent($rows);
+            $response->getHeaders()->addHeaderLine('Content-type', 'text/csv');
+            $response->getHeaders()->addHeaderLine('Content-Disposition', 'attachment; filename="omekas_export.csv"');
+
+            return $response;
+        } else {
+            $args = $queryParams->toArray();
+            unset($args['page']);
+
+            $this->sendJob(['query' => $args]);
+
+            $message = new Message(
+                'Export started in %sjob %s%s', // @translate
+                sprintf('<a href="%s">', htmlspecialchars($this->getJobUrl(),
+            )),
+                $this->getJobId(),
+                '</a>'
+            );
+
+            $message->setEscapeHtml(false);
+            $this->messenger()->addSuccess($message);
+
+            return $this->redirect()->toRoute('admin/export/list', ['controller' => 'list', 'action' => 'list'], []);
         }
-        $view->setVariable('collection', $itemMedia);
-        $view->setVariable('properties', $propertyNames);
-        $view->setTerminal(true);
-        return $view;
+    }
+
+    protected function sendJob($args)
+    {
+        $job = $this->jobDispatcher()->dispatch(ExportJob::class, $args);
+
+        $jobUrl = $this->url()->fromRoute('admin/id', [
+                    'controller' => 'job',
+                    'action' => 'show',
+                    'id' => $job->getId(),
+                ]);
+
+        $this->setJobId($job->getId());
+        $this->setJobUrl($jobUrl);
+    }
+
+    protected function getJobId()
+    {
+        return $this->jobId;
+    }
+
+    protected function setJobId($id)
+    {
+        $this->jobId = $id;
+    }
+
+    protected function getJobUrl()
+    {
+        return $this->jobUrl;
+    }
+
+    protected function setJobUrl($url)
+    {
+        $this->jobUrl = $url;
     }
 }
