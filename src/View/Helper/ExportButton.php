@@ -7,6 +7,8 @@ use Laminas\Mvc\Application;
 
 class ExportButton extends AbstractHelper
 {
+    protected $application;
+
     public function __construct(Application $application)
     {
         $this->application = $application;

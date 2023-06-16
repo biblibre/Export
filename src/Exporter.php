@@ -5,6 +5,7 @@ namespace Export;
 class Exporter
 {
     protected $application;
+    protected $fileHandle;
 
     public function __construct($application)
     {

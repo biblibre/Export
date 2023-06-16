@@ -8,9 +8,14 @@ class ListController extends AbstractActionController
 {
     public function listAction()
     {
-        $view = new ViewModel;
+        $downloads = [];
+
         $directoryPath = 'files/CSV_Export';
-        $downloads = array_diff(scandir($directoryPath, SCANDIR_SORT_DESCENDING), ['..', '.']);
+        if (is_dir($directoryPath)) {
+            $downloads = array_diff(scandir($directoryPath, SCANDIR_SORT_DESCENDING), ['..', '.']);
+        }
+
+        $view = new ViewModel;
         $view->setVariable('downloads', $downloads);
 
         return $view;
