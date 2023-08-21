@@ -62,6 +62,35 @@ return [
                     ],
                 ],
             ],
+            'site' => [
+                'child_routes' => [
+                    'export' => [
+                        'type' => 'Literal',
+                        'options' => [
+                            'route' => '/export',
+                            'defaults' => [
+                                '__NAMESPACE__' => 'Export\Controller',
+                                'controller' => 'Index',
+                                'action' => 'export',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'download' => [
+                                'type' => 'Literal',
+                                'options' => [
+                                    'route' => '/download',
+                                    'defaults' => [
+                                        '__NAMESPACE__' => 'Export\Controller',
+                                        'controller' => 'Index',
+                                        'action' => 'download',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ],
     ],
 
