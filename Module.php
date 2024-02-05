@@ -23,23 +23,17 @@ class Module extends AbstractModule
         );
         $sharedEventManager->attach(
             'Omeka\Controller\Admin\Item',
+            'view.browse.before',
+            [$this, 'echoExportSelectedButtonHtml']
+        );
+        $sharedEventManager->attach(
+            'Omeka\Controller\Admin\Item',
             'view.show.sidebar',
             [$this, 'echoExportButtonHtml']
         );
         $sharedEventManager->attach(
             'Omeka\Controller\Admin\Media',
             'view.show.sidebar',
-            [$this, 'echoExportButtonHtml']
-        );
-        $sharedEventManager->attach(
-            'Omeka\Controller\Site\Item',
-            'view.show.after',
-            [$this, 'echoExportButtonHtml']
-        );
-
-        $sharedEventManager->attach(
-            'Omeka\Controller\Site\Media',
-            'view.show.after',
             [$this, 'echoExportButtonHtml']
         );
         $sharedEventManager->attach(
@@ -52,11 +46,26 @@ class Module extends AbstractModule
             'view.browse.before',
             [$this, 'addAdminExportJs']
         );
+        $sharedEventManager->attach(
+            'Omeka\Controller\Site\Item',
+            'view.show.after',
+            [$this, 'echoExportButtonHtml']
+        );
+        $sharedEventManager->attach(
+            'Omeka\Controller\Site\Media',
+            'view.show.after',
+            [$this, 'echoExportButtonHtml']
+        );
     }
     public function echoExportButtonHtml($event)
     {
         $view = $event->getTarget();
-        echo $view->partial('export/exportbutton');
+        echo $view->partial('export/export-button');
+    }
+    public function echoExportSelectedButtonHtml($event)
+    { 
+        $view = $event->getTarget();
+        echo $view->partial('export/export-selected-button');
     }
     public function onSiteSettingsFormAddElements($event)
     {

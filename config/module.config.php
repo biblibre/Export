@@ -36,17 +36,6 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes' => [
-                            'download' => [
-                                'type' => 'Literal',
-                                'options' => [
-                                    'route' => '/download',
-                                    'defaults' => [
-                                        '__NAMESPACE__' => 'Export\Controller',
-                                        'controller' => 'Index',
-                                        'action' => 'download',
-                                    ],
-                                ],
-                            ],
                             'list' => [
                                 'type' => 'Literal',
                                 'options' => [
@@ -62,30 +51,26 @@ return [
                     ],
                 ],
             ],
-            'site' => [
+            'export' => [
+                'type' => 'Literal',
+                'options' => [
+                    'route' => '/export',
+                    'defaults' => [
+                        '__NAMESPACE__' => 'Export\Controller',
+                        'controller' => 'Index',
+                        'action' => 'export',
+                    ],
+                ],
+                'may_terminate' => false,
                 'child_routes' => [
-                    'export' => [
+                    'download' => [
                         'type' => 'Literal',
                         'options' => [
-                            'route' => '/export',
+                            'route' => '/download',
                             'defaults' => [
                                 '__NAMESPACE__' => 'Export\Controller',
                                 'controller' => 'Index',
-                                'action' => 'export',
-                            ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes' => [
-                            'download' => [
-                                'type' => 'Literal',
-                                'options' => [
-                                    'route' => '/download',
-                                    'defaults' => [
-                                        '__NAMESPACE__' => 'Export\Controller',
-                                        'controller' => 'Index',
-                                        'action' => 'download',
-                                    ],
-                                ],
+                                'action' => 'download',
                             ],
                         ],
                     ],
@@ -131,6 +116,8 @@ return [
     'view_helpers' => [
         'factories' => [
             'exportButton' => Service\ViewHelper\ExportButtonFactory::class,
+            'exportSelectedButton' => Service\ViewHelper\ExportSelectedButtonFactory::class,
+
         ],
     ],
     'service_manager' => [
