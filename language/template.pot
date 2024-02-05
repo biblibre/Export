@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-01 08:40+0000\n"
+"POT-Creation-Date: 2024-02-05 14:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,14 +17,55 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: view/export/index/index.phtml:7
+#: view/export/index/export.phtml:7
 msgid "Export Settings"
 msgstr ""
 
-#: view/export/index/index.phtml:10
+#: view/export/index/export.phtml:11
+msgid "Start download"
+msgstr ""
+
+#: view/export/list/list.phtml:6
+msgid "Download list"
+msgstr ""
+
+#: view/export/list/list.phtml:8
+msgid "Previous downloads from tasks"
+msgstr ""
+
+#: view/export/list/list.phtml:10
+msgid "No downloads yet"
+msgstr ""
+
+#: src/Controller/IndexController.php:35 src/Controller/IndexController.php:90
+#, php-format
+msgid "Export started in %sjob %s%s"
+msgstr ""
+
+#: src/Form/SiteSettingsFieldset.php:19
+msgid "Show on item page"
+msgstr ""
+
+#: src/Form/SiteSettingsFieldset.php:28
+msgid "Show on media page"
+msgstr ""
+
+#: src/Form/ImportForm.php:21
+msgid "Select item set to export"
+msgstr ""
+
+#: src/View/Helper/ExportSelectedButton.php:25
+msgid "\">Export selected</button>"
+msgstr ""
+
+#: src/View/Helper/ExportButton.php:34
+msgid "\"><button id=\"export_button\">Export</button></a>"
+msgstr ""
+
+#: config/module.config.php:90
 msgid "Download"
 msgstr ""
 
-#: src/Form/ImportForm.php:23
-msgid "Select item set to export"
+#: config/module.config.php:96
+msgid "Download List"
 msgstr ""

@@ -22,7 +22,7 @@ class ExportSelectedButton extends AbstractHelper
         $query = $request->getQuery()->toArray();
         $url = $view->url('export/download', [], ['query' => $query], true);
 
-        return '<button id="export-selected-button" style="margin-left:10px; display:none" form="batch-form" formaction="' . $url . '">Export selected</button>';
+        return '<button id="export-selected-button" style="margin-left:10px; display:none" form="batch-form" formaction="' . $url . '">Export selected</button>'; //@translate
     }
 }
    

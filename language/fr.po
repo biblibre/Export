@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-01 08:40+0000\n"
+"POT-Creation-Date: 2024-02-05 14:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: GUILLOT Thibaud <thibaud.guillot@biblibre.com>, 2021\n"
 "Language-Team: FRENCH\n"
@@ -20,14 +20,55 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: view/export/index/index.phtml:7
+#: view/export/index/export.phtml:7
 msgid "Export Settings"
 msgstr "Paramètres de l'export"
 
-#: view/export/index/index.phtml:10
+#: view/export/index/export.phtml:11
+msgid "Start download"
+msgstr "Télécharger"
+
+#: view/export/list/list.phtml:6
+msgid "Download list"
+msgstr "Téléchargements"
+
+#: view/export/list/list.phtml:8
+msgid "Previous downloads from tasks"
+msgstr "Téléchargements précedents issus des tâches"
+
+#: view/export/list/list.phtml:10
+msgid "No downloads yet"
+msgstr "Pas encore de téléchargement"
+
+#: src/Controller/IndexController.php:35 src/Controller/IndexController.php:90
+#, php-format
+msgid "Export started in %sjob %s%s"
+msgstr "Export démarré dans la %s tâche %s%s"
+
+#: src/Form/SiteSettingsFieldset.php:19
+msgid "Show on item page"
+msgstr "Montrer sur la page de contenu"
+
+#: src/Form/SiteSettingsFieldset.php:28
+msgid "Show on media page"
+msgstr "Montrer sur la page du média"
+
+#: src/Form/ImportForm.php:21
+msgid "Select item set to export"
+msgstr "Sélectionner une collection à exporter"
+
+#: src/View/Helper/ExportSelectedButton.php:25
+msgid "\">Export selected</button>"
+msgstr "\">Exporter la sélection</button>"
+
+#: src/View/Helper/ExportButton.php:34
+msgid "\"><button id=\"export_button\">Export</button></a>"
+msgstr "\"><button id=\"export_button\">Exporter</button></a>"
+
+#: config/module.config.php:90
 msgid "Download"
 msgstr "Téléchargement"
 
-#: src/Form/ImportForm.php:23
-msgid "Select item set to export"
-msgstr "Sélectionner une collection à exporter"
+#: config/module.config.php:96
+msgid "Download List"
+msgstr "Liste de téléchargements"
