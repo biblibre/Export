@@ -17,9 +17,9 @@ class Exporter
         $services = $this->application->getServiceManager();
         $api = $services->get('Omeka\ApiManager');
 
-        $item[] = $api->search('items', ['id' => $query])->getContent()[0];
+        $resource[] = $api->read('resources', ['id' => $query])->getContent();
 
-        $this->transformToCSV($item);
+        $this->transformToCSV($resource);
     }
 
     public function downloadSelected($query)

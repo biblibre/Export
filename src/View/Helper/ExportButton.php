@@ -19,28 +19,18 @@ class ExportButton extends AbstractHelper
         $mvcEvent = $this->application->getMvcEvent();
         $request = $mvcEvent->getRequest();
         $routeMatch = $mvcEvent->getRouteMatch();
-
-        $route = $routeMatch->getMatchedRouteName();
         $params = $routeMatch->getParams();
 
         $view = $this->getView();
-        $onResultPage = true;
 
-        if ($route === 'admin/id' && ($params['controller'] === 'Omeka\Controller\Admin\Item' && $params['action'] === 'show')) {
-            $query = [
-            'id' => $params['id'],
-           ];
-            $onResultPage = false;
+        if (array_key_exists('id', $params)) {
+            $query = ['id' => $params['id']];
         } else {
             $query = $request->getQuery()->toArray();
         }
 
-        $url = $view->url('admin/export/download', [], ['query' => $query]);
+        $url = $view->url('export/download', [], ['query' => $query ], true);
 
-        if ($onResultPage) {
-            return '<button form="batch-form" formaction="' . $url . '">Export CSV</button>';
-        } else {
-            return '<a href="' . $url . '"><button>Export CSV</button></a>';
-        }
+        return '<a href="' . $url . '"><button id="export_button">Export</button></a>'; //@translate
     }
 }

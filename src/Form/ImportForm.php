@@ -8,8 +8,6 @@ class ImportForm extends Form
 {
     public function init()
     {
-        //$this->setAttribute('action', 'export/job');
-        //$this->setAttribute('method', 'post');
         $this->add([
                     'name' => 'item_set',
                     'type' => ItemSetSelect::class,
